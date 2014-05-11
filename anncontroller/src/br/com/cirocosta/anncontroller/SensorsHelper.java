@@ -11,6 +11,11 @@ import android.hardware.SensorManager;
 import android.util.Log;
 import android.widget.Button;
 
+/**
+ * Implementa a obtencao de dados dos Sensores do device.
+ * @author ciro
+ *
+ */
 public class SensorsHelper implements SensorEventListener {
 
 	public static final String TAG = "SensorsHelper";
@@ -20,12 +25,14 @@ public class SensorsHelper implements SensorEventListener {
 	private Button btnTras, btnFrente;
 	private long lastUpdate = 0;
 	private boolean BTN_TRAS = false, BTN_FRENTE = false;
-
-	public SensorsHelper(Context context) {
+	private DeviceInterface di;
+	
+	public SensorsHelper(Context context, DeviceInterface di) {
 		this.mContext = context;
+		this.di = di;
 	}
 
-	private void setSensors() {
+	public void setSensors() {
 		senSensorManager = (SensorManager) this.mContext
 				.getSystemService(Context.SENSOR_SERVICE);
 		senAccelerometer = senSensorManager
@@ -77,6 +84,7 @@ public class SensorsHelper implements SensorEventListener {
 				}
 			}
 			Log.v("dsauihdsa", sensorData.toString());
+			di.onSensorsData(sensorData);
 		}
 	}
 }

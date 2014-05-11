@@ -11,16 +11,21 @@ public class MainActivity extends ActionBarActivity implements NsdInterface {
 	private final static String TAG = "MainActivity";
 	private NsdHelper mNsdHelper;
 	private SocketIoHelper mSocketIo;
+	MyDevice mDevice;
+	SensorsHelper mSensorHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		mDevice = new MyDevice();
 		mNsdHelper = new NsdHelper(this, this);
-		mSocketIo = new SocketIoHelper(new MyDevice());
+		mSocketIo = new SocketIoHelper(mDevice);
 		mNsdHelper.initializeNsd();
 		mNsdHelper.discoverServices();
+
+		mSensorHelper = mDevice.initializeSensors(this);
 	}
 
 	@Override
@@ -47,6 +52,16 @@ public class MainActivity extends ActionBarActivity implements NsdInterface {
 	public void onDesiredServiceResolved(String url) {
 		Log.v(TAG, "DesiredService Resolved: Got the url -- " + url);
 		mSocketIo.setSocketIo(url);
+	}
+
+	protected void onPause() {
+		super.onPause();
+		mSensorHelper.pauseSensors();
+	}
+
+	protected void onResume() {
+		super.onResume();
+		mSensorHelper.resumeSensors();
 	}
 
 }

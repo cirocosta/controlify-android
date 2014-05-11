@@ -16,3 +16,8 @@ The device is meant to be an object, which is made of : Name, Sensors and Contro
 |          | nothing is passed to it.                                  |
 | sensors  | The logic of the accelerometer, if this is the chosen one |
 | Controls | The buttons which lets the user expands its interaction.  |
+
+
+### Main Loop
+
+Deve haver em uma thread um loop principal emitindo eventos de X em X ms. Para cada iterada dentro deste loop deve-se obter as informações do device (infos de sensores e botões) e então executar algum callback passado pela interface. A classe `MyDevice` portanto tratar-se-á apenas de uma representação do estado do aparelho.
