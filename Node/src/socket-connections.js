@@ -7,3 +7,7 @@ function openConnection (app, onSocketConnection) {
     console.log(socket);
   });
 }
+
+module.exports = {
+  openConnection: openConnection
+};

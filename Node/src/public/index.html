@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teste</title>
+</head>
+<body>
+Teste
+
+<script type="text/javascript" src="vendor/socket.io.min.js"></script>
+<script type="text/javascript">
+    var socket = io.connect('http://localhost:3000');
+    socket.on('news', function (data) {
+        console.log(data);
+        socket.emit('my other event', {dahora: 'dahora'});
+    });
+
+    socket.on('connect', function () {
+        console.log("Connected!");
+    });
+
+    socket.on('connect_error', function (err) {
+        console.log(err);
+    });
+</script>
+</body>
+</html>
