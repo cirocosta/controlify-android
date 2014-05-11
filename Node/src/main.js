@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express');
 var sd = require('./service-discovery');
 var sc = require('./socket-connections');
@@ -20,12 +22,8 @@ var server = app.listen(3000, '0.0.0.0', function () {
 function main () {
   app.use(express.static(__dirname + '/public'));
 
-  app.get('/', function (req, res) {
-    res.send('error!');
-  });
+  sc.openConnection(server);
 
   sd.startAdvertisement('ann-controller', server.address().port);
   sd.startBrowser();
-
-  sc.openConnection(app);
 }

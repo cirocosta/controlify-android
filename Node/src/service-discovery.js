@@ -1,3 +1,5 @@
+'use strict';
+
 var mdns = require('mdns2');
 
 function startAdvertisement (name, port) {

@@ -11,10 +11,4 @@
         android:text="Hello World!"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <Button
-        android:id="@+id/btnTrigger"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Trigger NSD!" />
-
 </LinearLayout>

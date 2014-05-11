@@ -5,8 +5,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
 
 public class MainActivity extends ActionBarActivity implements NsdInterface {
 
@@ -20,24 +18,9 @@ public class MainActivity extends ActionBarActivity implements NsdInterface {
 		setContentView(R.layout.activity_main);
 
 		mNsdHelper = new NsdHelper(this, this);
-		mSocketIo = new SocketIoHelper();
+		mSocketIo = new SocketIoHelper(new MyDevice());
 		mNsdHelper.initializeNsd();
-		
-		setUiEvents();
-	}
-	
-	private void setUiEvents() {
-		
-		// button
-		
-		(findViewById(R.id.btnTrigger))
-				.setOnClickListener(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						mNsdHelper.discoverServices();
-					}
-				});
+		mNsdHelper.discoverServices();
 	}
 
 	@Override
@@ -56,11 +39,14 @@ public class MainActivity extends ActionBarActivity implements NsdInterface {
 		}
 	}
 
-
+	/**
+	 * Will be triggered when a service that we are expecting is resolved and we
+	 * are ready to go.
+	 */
 	@Override
 	public void onDesiredServiceResolved(String url) {
-		Log.v(TAG, url);
+		Log.v(TAG, "DesiredService Resolved: Got the url -- " + url);
 		mSocketIo.setSocketIo(url);
 	}
-	
+
 }
