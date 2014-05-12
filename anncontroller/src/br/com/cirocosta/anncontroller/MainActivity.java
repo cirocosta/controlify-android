@@ -1,6 +1,9 @@
 package br.com.cirocosta.anncontroller;
 
+import java.util.Timer;
+
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -13,6 +16,12 @@ public class MainActivity extends ActionBarActivity implements NsdInterface {
 	private SocketIoHelper mSocketIo;
 	MyDevice mDevice;
 	SensorsHelper mSensorHelper;
+
+	Timer timer;
+	MainLoop ml;
+
+	private Thread thread;
+	private Handler handler = new Handler();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +53,6 @@ public class MainActivity extends ActionBarActivity implements NsdInterface {
 		}
 	}
 
-	/**
-	 * Will be triggered when a service that we are expecting is resolved and we
-	 * are ready to go.
-	 */
 	@Override
 	public void onDesiredServiceResolved(String url) {
 		Log.v(TAG, "DesiredService Resolved: Got the url -- " + url);
@@ -57,11 +62,18 @@ public class MainActivity extends ActionBarActivity implements NsdInterface {
 	protected void onPause() {
 		super.onPause();
 		mSensorHelper.pauseSensors();
+		timer.cancel();
 	}
 
 	protected void onResume() {
 		super.onResume();
 		mSensorHelper.resumeSensors();
+
+		timer = new Timer();
+		ml = new MainLoop();
+
+		ml.setDevice(mDevice);
+		timer.scheduleAtFixedRate(ml, 0, 300);
 	}
 
 }

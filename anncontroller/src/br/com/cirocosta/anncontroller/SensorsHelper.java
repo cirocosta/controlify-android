@@ -8,7 +8,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 import android.widget.Button;
 
 /**
@@ -24,7 +23,6 @@ public class SensorsHelper implements SensorEventListener {
 	private Context mContext;
 	private Button btnTras, btnFrente;
 	private long lastUpdate = 0;
-	private boolean BTN_TRAS = false, BTN_FRENTE = false;
 	private DeviceInterface di;
 	
 	public SensorsHelper(Context context, DeviceInterface di) {
@@ -76,14 +74,11 @@ public class SensorsHelper implements SensorEventListener {
 				z = event.values[2];
 
 				try {
-					sensorData.put("aceX", x).put("aceY", y).put("aceZ", z)
-							.put("btnTras", BTN_TRAS)
-							.put("btnFrente", BTN_FRENTE);
+					sensorData.put("aceX", x).put("aceY", y).put("aceZ", z);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 			}
-			Log.v("dsauihdsa", sensorData.toString());
 			di.onSensorsData(sensorData);
 		}
 	}

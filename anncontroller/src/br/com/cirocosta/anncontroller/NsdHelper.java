@@ -7,7 +7,6 @@ import android.util.Log;
 
 public class NsdHelper {
 
-	private Context mContext;
 	private NsdManager mNsdManager;
 	private NsdManager.ResolveListener mResolveListener;
 	private NsdManager.DiscoveryListener mDiscoveryListener;
@@ -22,7 +21,6 @@ public class NsdHelper {
 	public String currentServiceUrl = "";
 
 	public NsdHelper(Context context, NsdInterface ni) {
-		mContext = context;
 		mNsdManager = (NsdManager) context
 				.getSystemService(Context.NSD_SERVICE);
 		nsdInterface = ni;
@@ -32,11 +30,9 @@ public class NsdHelper {
 		initializeResolveListener();
 		initializeDiscoveryListener();
 		initializeRegistrationListener();
-
-		// mNsdManager.init(mContext.getMainLooper(), this);
-
 	}
 
+	
 	public void initializeDiscoveryListener() {
 		mDiscoveryListener = new NsdManager.DiscoveryListener() {
 
@@ -104,8 +100,6 @@ public class NsdHelper {
 							+ Integer.toString(serviceInfo.getPort());
 					urlGotten = "http://" + urlGotten.replace("/", "");
 
-					
-					
 					Log.v(TAG, urlGotten);
 
 					if (!urlGotten.equals(currentServiceUrl)) {

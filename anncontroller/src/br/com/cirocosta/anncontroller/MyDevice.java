@@ -1,9 +1,11 @@
 package br.com.cirocosta.anncontroller;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 
 /**
  * Centraliza todo o estado do Device, i.e, valores dos sensores e botoes em um
@@ -12,14 +14,15 @@ import android.os.Build;
  * @author ciro
  * 
  */
-public class MyDevice implements DeviceInterface{
+public class MyDevice implements DeviceInterface {
+
+	public static final String TAG = "MyDevice";
 
 	private String name;
 	private SensorsHelper sh;
 
-	private float aceX, aceY, aceZ;
-	private boolean mF, mB, mL, mR;
-	private boolean aA, aB, aC, aD;
+	private JSONObject currSensorData;
+	private JSONObject currButtonData;
 
 	public MyDevice() {
 		this.name = getDeviceName();
@@ -54,6 +57,11 @@ public class MyDevice implements DeviceInterface{
 		return this.sh;
 	}
 
+	public JSONObject getDeviceData() throws JSONException {
+		return new JSONObject().put("sensors", this.currSensorData).put(
+				"buttons", this.currButtonData);
+	}
+
 	@Override
 	public String toString() {
 		return this.name;
@@ -61,10 +69,14 @@ public class MyDevice implements DeviceInterface{
 
 	@Override
 	public void onButtonsData(JSONObject data) {
+		// Log.v(TAG, "onButtonsData: " + data.toString());
+		this.currButtonData = data;
 	}
 
 	@Override
 	public void onSensorsData(JSONObject data) {
+		// Log.v(TAG, "onSensorsData: " + data.toString());
+		this.currSensorData = data;
 	}
 
 }
