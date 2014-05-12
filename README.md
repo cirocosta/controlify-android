@@ -21,3 +21,8 @@ The device is meant to be an object, which is made of : Name, Sensors and Contro
 ### Main Loop
 
 Deve haver em uma thread um loop principal emitindo eventos de X em X ms. Para cada iterada dentro deste loop deve-se obter as informações do device (infos de sensores e botões) e então executar algum callback passado pela interface. A classe `MyDevice` portanto tratar-se-á apenas de uma representação do estado do aparelho.
+
+
+## Considerations
+
+At this time this implementation is REALLY laggy for a real application. We are wasting a bunch of time parsing/constructing these JSON objects and sending over to *socket.io*. This is all about conception :grin:

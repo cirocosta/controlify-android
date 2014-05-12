@@ -1,26 +1,35 @@
 package br.com.cirocosta.anncontroller;
 
+import io.socket.SocketIO;
+
 import java.util.TimerTask;
 
 import org.json.JSONException;
 
 import android.util.Log;
 
-public class MainLoop extends TimerTask{
+public class MainLoop extends TimerTask {
 
-	MyDevice mDevice;
+	private MyDevice mDevice;
+	private SocketIoHelper mSocketConnection;
+
 	public static final String TAG = "MainLoop";
-	
+
 	public void setDevice(MyDevice device) {
 		this.mDevice = device;
 	}
-	
+
+	public void setSocketConnection(SocketIoHelper socketConnection) {
+		this.mSocketConnection = socketConnection;
+	}
+
 	@Override
 	public void run() {
 		try {
-			Log.d(TAG, this.mDevice.getDeviceData().toString());
+			this.mSocketConnection.sendData(Constants.EV_ALL_DATA,
+					this.mDevice.getDeviceData());
 		} catch (JSONException e) {
-			Log.d(TAG, "no data");
+			Log.d(TAG, "Error w/ json");
 		}
 	}
 

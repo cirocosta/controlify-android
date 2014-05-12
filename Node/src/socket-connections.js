@@ -3,7 +3,8 @@
 var io;
 var events = {
     mobile: {
-        connection: 'mobile-connect'
+        connection: 'mobile-connect',
+        allData: 'mobile-all-data'
     },
     browser: {
         connection: 'browser-connect',
@@ -27,6 +28,13 @@ function openConnection (app, onSocketConnection) {
       socket.join(rooms.mobile);
       socket.broadcast.to(rooms.browser)
             .emit(events.mobile.connection, data);
+    });
+
+
+    // dados com todas as infos do cel
+
+    socket.on(events.mobile.allData, function (data) {
+      socket.broadcast.to(rooms.browser).emit(events.mobile.allData, data);
     });
 
     // quando houver conexao do browser

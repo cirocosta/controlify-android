@@ -23,9 +23,24 @@ public class SocketIoHelper {
 	private SocketIO mSocket;
 	private String currentUrl = "";
 	private MyDevice device;
+	private boolean connected = false;
 
+	public static final String TAG = "SocketIoHelper";
+	
 	public SocketIoHelper(MyDevice device) {
 		this.device = device;
+	}
+	
+	public void sendData(String event, JSONObject data) {
+		if (connected) {
+			try {
+				mSocket.emit(event, data);				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			Log.d(TAG, "SocketIO not connected yet");
+		}
 	}
 
 	public void setSocketIo(String url) {
@@ -42,6 +57,7 @@ public class SocketIoHelper {
 
 			@Override
 			public void onConnect() {
+				connected = true;
 				Log.d("SOCKETIO",
 						"Connection Event Fired. Sending " + device.toString());
 				try {
@@ -54,6 +70,7 @@ public class SocketIoHelper {
 			
 			@Override
 			public void onDisconnect() {
+				connected = false;
 				Log.v("SOCKETIO", "Disconnected");
 			}
 

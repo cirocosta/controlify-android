@@ -3,7 +3,6 @@ package br.com.cirocosta.anncontroller;
 import java.util.Timer;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -19,9 +18,6 @@ public class MainActivity extends ActionBarActivity implements NsdInterface {
 
 	Timer timer;
 	MainLoop ml;
-
-	private Thread thread;
-	private Handler handler = new Handler();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +69,8 @@ public class MainActivity extends ActionBarActivity implements NsdInterface {
 		ml = new MainLoop();
 
 		ml.setDevice(mDevice);
+		ml.setSocketConnection(mSocketIo);
+		
 		timer.scheduleAtFixedRate(ml, 0, 300);
 	}
 
