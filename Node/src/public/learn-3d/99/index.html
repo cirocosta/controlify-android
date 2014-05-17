@@ -1,11 +1,26 @@
 <html>
-    <head>
-        <title>My first Three.js app</title>
-        <style>canvas { width: 100%; height: 100% }</style>
-    </head>
-    <body>
-        <script src="../three.min.js"></script>
-        <script src="controls.js"></script>
-        <script src="index.js"></script>
-    </body>
+  <head>
+    <title>My first Three.js app</title>
+    <style>canvas { width: 100%; height: 100% }</style>
+  </head>
+  <body>
+    <button id="magic-btn">Let the magic begin!</button>
+    <script src="../three.min.js"></script>
+    <script src="controls.js"></script>
+    <script src="index.js"></script>
+    <script type="text/javascript">
+      var btn = document.querySelector('#magic-btn');
+      var pl = new PointerLock();
+
+      pl.setPointerLock(btn, function (isLocked) {
+        console.log("Is locked?");
+        console.log(isLocked);
+      }, function (e) {
+        console.log(e);
+      });
+      btn.onclick = function (e) {
+        pl.requestPermission();
+      };
+    </script>
+  </body>
 </html>

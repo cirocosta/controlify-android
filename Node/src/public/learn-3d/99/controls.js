@@ -1,41 +1,98 @@
-/////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////// //
-// PARA OBTERMOS A PERMISSAO É PRECISO QUE O USUÁRIO CLIQUE EM ALGO // //
-////////////////////////////////////////////////////////////////////// //
-/////////////////////////////////////////////////////////////////////////
+function PointerLock () {}
 
+/**
+ * Checks if the browser has Pointer Lock enabled
+ */
+PointerLock.prototype._isEnabled = function() {
+  return 'pointerLockElement' in document ||
+         'mozPointerLockElement' in document ||
+         'webkitPointerLockElement' in document;
+};
 
-var havePointerLock = 'pointerLockElement' in document ||
-    'mozPointerLockElement' in document ||
-    'webkitPointerLockElement' in document;
+/**
+ * Sets the pointerLock stuff to the element passed.
+ * @param {DOMElement} element a DOM element which will be pointer
+ *                             locked
+ * @param {Function} ccb     the callback function for the change in
+ *                           the state of pointer lock. It receives a
+ *                           boolean as an argument (isLocked)
+ *                           indicating if it is locked of not.
+ * @param {Function} mcb     the callback function for the change in
+ * the movimentation of the cursor
+ */
+PointerLock.prototype.setPointerLock = function(element, ccb, mcb) {
+  if (!this._isEnabled())
+    throw new Error('No pointerLock for this browser :(');
 
-var element = document.body;
+  var scope = this;
 
-setTimeout(function () {
-  console.log(element);
-
+  // preparing the element
   element.requestPointerLock = element.requestPointerLock ||
-             element.mozRequestPointerLock ||
-             element.webkitRequestPointerLock;
-  // Ask the browser to lock the pointer
-  element.requestPointerLock();
+                               element.mozRequestPointerLock ||
+                               element.webkitRequestPointerLock;
+  this.element = element;
+  document.exitPointerLock = document.exitPointerLock ||
+                             document.mozExitPointerLock ||
+                             document.webkitExitPointerLock;
 
-  // Ask the browser to release the pointer
-  // document.exitPointerLock = document.exitPointerLock ||
-  //          document.mozExitPointerLock ||
-  //          document.webkitExitPointerLock;
-  // document.exitPointerLock();
-}, 2000);
+  // preparing the callbacks
 
-document.addEventListener('pointerlockchange', changeCallback, false);
-document.addEventListener('mozpointerlockchange', changeCallback, false);
-document.addEventListener('webkitpointerlockchange', changeCallback, false);
+  var plcCbFun = function (e) {
+    scope._pointerLockCallback(e, ccb, mcb);
+  }
 
-// Hook mouse move events
-document.addEventListener("mousemove", this.moveCallback, false);
+  document.addEventListener('pointerlockchange', plcCbFun, false);
+  document.addEventListener('mozpointerlockchange', plcCbFun, false);
+  document.addEventListener('webkitpointerlockchange', plcCbFun, false);
 
-function changeCallback (a) {
-  console.log("dakds");
-  console.log("a");
-}
+  return this;
+};
 
+
+PointerLock.prototype._pointerLockCallback = function(e, ccb, mcb) {
+
+  var element = document.querySelector('#magic-btn');
+
+  var scope = this;
+  var mmCbFun = function (e) {
+    scope._moveCallback(e, mcb);
+  }
+
+  if (document.pointerLockElement === element ||
+      document.mozPointerLockElement === element ||
+      document.webkitPointerLockElement === element) {
+
+    ccb(true);
+    document.addEventListener("mousemove", mmCbFun, false);
+  } else {
+    ccb(false);
+    document.removeEventListener("mousemove", mmCbFun, false);
+  }
+};
+
+/**
+ * Triggers the permission for using this feature
+ */
+PointerLock.prototype.requestPermission = function() {
+  this.element.requestPointerLock();
+};
+
+/**
+ * Releases the pointerLock
+ */
+PointerLock.prototype.releaseThePointer = function() {
+  document.exitPointerLock();
+};
+
+PointerLock.prototype._moveCallback = function(e, mcb) {
+  var movementX = e.movementX ||
+                  e.mozMovementX ||
+                  e.webkitMovementX ||
+                  0,
+      movementY = e.movementY ||
+                  e.mozMovementY ||
+                  e.webkitMovementY ||
+                  0;
+
+  mcb({x: movementX, y: movementY});
+};
