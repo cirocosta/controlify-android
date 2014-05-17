@@ -17,6 +17,7 @@ var rooms = {
   browser: 'browser'
 };
 
+
 function openConnection (app, onSocketConnection) {
   io = require('socket.io').listen(app);
 
@@ -30,18 +31,22 @@ function openConnection (app, onSocketConnection) {
             .emit(events.mobile.connection, data);
     });
 
-
-    // dados com todas as infos do cel
-
-    socket.on(events.mobile.allData, function (data) {
-      socket.broadcast.to(rooms.browser).emit(events.mobile.allData, data);
-    });
-
     // quando houver conexao do browser
 
     socket.on(events.browser.connection, function (data) {
       socket.join(rooms.browser);
     });
+
+    // quando chegar do cel dados com as infos
+
+    // socket.on(events.mobile.allData, function (data) {
+    //   socket.broadcast.to(rooms.browser).emit(events.mobile.allData, data);
+    // });
+
+    setInterval(function () {
+      socket.broadcast.to(rooms.browser).emit(events.mobile.allData, 'data');
+    }, 50);
+
   });
 }
 

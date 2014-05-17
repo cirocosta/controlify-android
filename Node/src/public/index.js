@@ -24,5 +24,5 @@ socket.on(events.mobile.connection, function (data) {
 });
 
 socket.on(events.mobile.allData, function (data) {
-    console.log(data);
+    dates.push(new Date());
 });
