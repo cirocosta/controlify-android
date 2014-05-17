@@ -1,310 +1,310 @@
 
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>three.js - pointerlock controls</title>
-        <style>
-            html, body {
-                width: 100%;
-                height: 100%;
-            }
+  <head>
+    <meta charset="utf-8">
+    <title>three.js - pointerlock controls</title>
+    <style>
+      html, body {
+        width: 100%;
+        height: 100%;
+      }
 
-            body {
-                background-color: #ffffff;
-                margin: 0;
-                overflow: hidden;
-                font-family: arial;
-            }
+      body {
+        background-color: #ffffff;
+        margin: 0;
+        overflow: hidden;
+        font-family: arial;
+      }
 
-            #blocker {
+      #blocker {
 
-                position: absolute;
+        position: absolute;
 
-                width: 100%;
-                height: 100%;
+        width: 100%;
+        height: 100%;
 
-                background-color: rgba(0,0,0,0.5);
+        background-color: rgba(0,0,0,0.5);
 
-            }
+      }
 
-            #instructions {
+      #instructions {
 
-                width: 100%;
-                height: 100%;
+        width: 100%;
+        height: 100%;
 
-                display: -webkit-box;
-                display: -moz-box;
-                display: box;
+        display: -webkit-box;
+        display: -moz-box;
+        display: box;
 
-                -webkit-box-orient: horizontal;
-                -moz-box-orient: horizontal;
-                box-orient: horizontal;
+        -webkit-box-orient: horizontal;
+        -moz-box-orient: horizontal;
+        box-orient: horizontal;
 
-                -webkit-box-pack: center;
-                -moz-box-pack: center;
-                box-pack: center;
+        -webkit-box-pack: center;
+        -moz-box-pack: center;
+        box-pack: center;
 
-                -webkit-box-align: center;
-                -moz-box-align: center;
-                box-align: center;
+        -webkit-box-align: center;
+        -moz-box-align: center;
+        box-align: center;
 
-                color: #ffffff;
-                text-align: center;
+        color: #ffffff;
+        text-align: center;
 
-                cursor: pointer;
+        cursor: pointer;
 
-            }
+      }
 
-        </style>
-    </head>
-    <body>
-        <script src="../three.min.js"></script>
-        <script src="PointerLockControls.js"></script>
+    </style>
+  </head>
+  <body>
+    <script src="../three.min.js"></script>
+    <script src="PointerLockControls.js"></script>
 
-        <div id="blocker">
+    <div id="blocker">
 
-            <div id="instructions">
-                <span style="font-size:40px">Click to play</span>
-                <br />
-                (W, A, S, D = Move, SPACE = Jump, MOUSE = Look around)
-            </div>
+      <div id="instructions">
+        <span style="font-size:40px">Click to play</span>
+        <br />
+        (W, A, S, D = Move, SPACE = Jump, MOUSE = Look around)
+      </div>
 
-        </div>
+    </div>
 
-        <script>
+    <script>
 
-            var camera, scene, renderer;
-            var geometry, material, mesh;
-            var controls;
+      var camera, scene, renderer;
+      var geometry, material, mesh;
+      var controls;
 
-            var objects = [];
+      var objects = [];
 
-            var ray;
+      var ray;
 
-            var blocker = document.getElementById( 'blocker' );
-            var instructions = document.getElementById( 'instructions' );
+      var blocker = document.getElementById( 'blocker' );
+      var instructions = document.getElementById( 'instructions' );
 
-            // http://www.html5rocks.com/en/tutorials/pointerlock/intro/
+      // http://www.html5rocks.com/en/tutorials/pointerlock/intro/
 
-            var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
+      var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 
-            if ( havePointerLock ) {
+      if ( havePointerLock ) {
 
-                var element = document.body;
+        var element = document.body;
 
-                var pointerlockchange = function ( event ) {
+        var pointerlockchange = function ( event ) {
 
-                    if ( document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element ) {
+          if ( document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element ) {
 
-                        controls.enabled = true;
+            controls.enabled = true;
 
-                        blocker.style.display = 'none';
+            blocker.style.display = 'none';
 
-                    } else {
+          } else {
 
-                        controls.enabled = false;
+            controls.enabled = false;
 
-                        blocker.style.display = '-webkit-box';
-                        blocker.style.display = '-moz-box';
-                        blocker.style.display = 'box';
+            blocker.style.display = '-webkit-box';
+            blocker.style.display = '-moz-box';
+            blocker.style.display = 'box';
 
-                        instructions.style.display = '';
+            instructions.style.display = '';
 
-                    }
+          }
 
-                }
+        }
 
-                var pointerlockerror = function ( event ) {
+        var pointerlockerror = function ( event ) {
 
-                    instructions.style.display = '';
+          instructions.style.display = '';
 
-                }
+        }
 
-                // Hook pointer lock state change events
-                document.addEventListener( 'pointerlockchange', pointerlockchange, false );
-                document.addEventListener( 'mozpointerlockchange', pointerlockchange, false );
-                document.addEventListener( 'webkitpointerlockchange', pointerlockchange, false );
+        // Hook pointer lock state change events
+        document.addEventListener( 'pointerlockchange', pointerlockchange, false );
+        document.addEventListener( 'mozpointerlockchange', pointerlockchange, false );
+        document.addEventListener( 'webkitpointerlockchange', pointerlockchange, false );
 
-                document.addEventListener( 'pointerlockerror', pointerlockerror, false );
-                document.addEventListener( 'mozpointerlockerror', pointerlockerror, false );
-                document.addEventListener( 'webkitpointerlockerror', pointerlockerror, false );
+        document.addEventListener( 'pointerlockerror', pointerlockerror, false );
+        document.addEventListener( 'mozpointerlockerror', pointerlockerror, false );
+        document.addEventListener( 'webkitpointerlockerror', pointerlockerror, false );
 
-                instructions.addEventListener( 'click', function ( event ) {
+        instructions.addEventListener( 'click', function ( event ) {
 
-                    instructions.style.display = 'none';
+          instructions.style.display = 'none';
 
-                    // Ask the browser to lock the pointer
-                    element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+          // Ask the browser to lock the pointer
+          element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
 
-                    if ( /Firefox/i.test( navigator.userAgent ) ) {
+          if ( /Firefox/i.test( navigator.userAgent ) ) {
 
-                        var fullscreenchange = function ( event ) {
+            var fullscreenchange = function ( event ) {
 
-                            if ( document.fullscreenElement === element || document.mozFullscreenElement === element || document.mozFullScreenElement === element ) {
+              if ( document.fullscreenElement === element || document.mozFullscreenElement === element || document.mozFullScreenElement === element ) {
 
-                                document.removeEventListener( 'fullscreenchange', fullscreenchange );
-                                document.removeEventListener( 'mozfullscreenchange', fullscreenchange );
+                document.removeEventListener( 'fullscreenchange', fullscreenchange );
+                document.removeEventListener( 'mozfullscreenchange', fullscreenchange );
 
-                                element.requestPointerLock();
-                            }
-
-                        }
-
-                        document.addEventListener( 'fullscreenchange', fullscreenchange, false );
-                        document.addEventListener( 'mozfullscreenchange', fullscreenchange, false );
-
-                        element.requestFullscreen = element.requestFullscreen || element.mozRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen;
-
-                        element.requestFullscreen();
-
-                    } else {
-
-                        element.requestPointerLock();
-
-                    }
-
-                }, false );
-
-            } else {
-
-                instructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
+                element.requestPointerLock();
+              }
 
             }
 
-            init();
-            animate();
+            document.addEventListener( 'fullscreenchange', fullscreenchange, false );
+            document.addEventListener( 'mozfullscreenchange', fullscreenchange, false );
 
-            function init() {
+            element.requestFullscreen = element.requestFullscreen || element.mozRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen;
 
-                camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
+            element.requestFullscreen();
 
-                scene = new THREE.Scene();
-                scene.fog = new THREE.Fog( 0xffffff, 0, 750 );
+          } else {
 
-                var light = new THREE.DirectionalLight( 0xffffff, 1.5 );
-                light.position.set( 1, 1, 1 );
-                scene.add( light );
+            element.requestPointerLock();
 
-                var light = new THREE.DirectionalLight( 0xffffff, 0.75 );
-                light.position.set( -1, - 0.5, -1 );
-                scene.add( light );
+          }
 
-                controls = new THREE.PointerLockControls( camera );
-                scene.add( controls.getObject() );
+        }, false );
 
-                ray = new THREE.Raycaster();
-                ray.ray.direction.set( 0, -1, 0 );
+      } else {
 
-                // floor
+        instructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
 
-                geometry = new THREE.PlaneGeometry( 2000, 2000, 100, 100 );
-                geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+      }
 
-                for ( var i = 0, l = geometry.vertices.length; i < l; i ++ ) {
+      init();
+      animate();
 
-                    var vertex = geometry.vertices[ i ];
-                    vertex.x += Math.random() * 20 - 10;
-                    vertex.y += Math.random() * 2;
-                    vertex.z += Math.random() * 20 - 10;
+      function init() {
 
-                }
+        camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
 
-                for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
+        scene = new THREE.Scene();
+        scene.fog = new THREE.Fog( 0xffffff, 0, 750 );
 
-                    var face = geometry.faces[ i ];
-                    face.vertexColors[ 0 ] = new THREE.Color().setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-                    face.vertexColors[ 1 ] = new THREE.Color().setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-                    face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
+        var light = new THREE.DirectionalLight( 0xffffff, 1.5 );
+        light.position.set( 1, 1, 1 );
+        scene.add( light );
 
-                }
+        var light = new THREE.DirectionalLight( 0xffffff, 0.75 );
+        light.position.set( -1, - 0.5, -1 );
+        scene.add( light );
 
-                material = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors } );
+        controls = new THREE.PointerLockControls( camera );
+        scene.add( controls.getObject() );
 
-                mesh = new THREE.Mesh( geometry, material );
-                scene.add( mesh );
+        ray = new THREE.Raycaster();
+        ray.ray.direction.set( 0, -1, 0 );
 
-                // objects
+        // floor
 
-                geometry = new THREE.BoxGeometry( 20, 20, 20 );
+        geometry = new THREE.PlaneGeometry( 2000, 2000, 100, 100 );
+        geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
 
-                for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
+        for ( var i = 0, l = geometry.vertices.length; i < l; i ++ ) {
 
-                    var face = geometry.faces[ i ];
-                    face.vertexColors[ 0 ] = new THREE.Color().setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-                    face.vertexColors[ 1 ] = new THREE.Color().setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-                    face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
+          var vertex = geometry.vertices[ i ];
+          vertex.x += Math.random() * 20 - 10;
+          vertex.y += Math.random() * 2;
+          vertex.z += Math.random() * 20 - 10;
 
-                }
+        }
 
-                for ( var i = 0; i < 500; i ++ ) {
+        for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
 
-                    material = new THREE.MeshPhongMaterial( { specular: 0xffffff, shading: THREE.FlatShading, vertexColors: THREE.VertexColors } );
+          var face = geometry.faces[ i ];
+          face.vertexColors[ 0 ] = new THREE.Color().setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
+          face.vertexColors[ 1 ] = new THREE.Color().setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
+          face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
 
-                    var mesh = new THREE.Mesh( geometry, material );
-                    mesh.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
-                    mesh.position.y = Math.floor( Math.random() * 20 ) * 20 + 10;
-                    mesh.position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
-                    scene.add( mesh );
+        }
 
-                    material.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
+        material = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors } );
 
-                    objects.push( mesh );
+        mesh = new THREE.Mesh( geometry, material );
+        scene.add( mesh );
 
-                }
+        // objects
 
-                //
+        geometry = new THREE.BoxGeometry( 20, 20, 20 );
 
-                renderer = new THREE.WebGLRenderer();
-                renderer.setClearColor( 0xffffff );
-                renderer.setSize( window.innerWidth, window.innerHeight );
+        for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
 
-                document.body.appendChild( renderer.domElement );
+          var face = geometry.faces[ i ];
+          face.vertexColors[ 0 ] = new THREE.Color().setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
+          face.vertexColors[ 1 ] = new THREE.Color().setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
+          face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
 
-                //
+        }
 
-                window.addEventListener( 'resize', onWindowResize, false );
+        for ( var i = 0; i < 500; i ++ ) {
 
-            }
+          material = new THREE.MeshPhongMaterial( { specular: 0xffffff, shading: THREE.FlatShading, vertexColors: THREE.VertexColors } );
 
-            function onWindowResize() {
+          var mesh = new THREE.Mesh( geometry, material );
+          mesh.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
+          mesh.position.y = Math.floor( Math.random() * 20 ) * 20 + 10;
+          mesh.position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
+          scene.add( mesh );
 
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
+          material.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
 
-                renderer.setSize( window.innerWidth, window.innerHeight );
+          objects.push( mesh );
 
-            }
+        }
 
-            function animate() {
+        //
 
-                requestAnimationFrame( animate );
+        renderer = new THREE.WebGLRenderer();
+        renderer.setClearColor( 0xffffff );
+        renderer.setSize( window.innerWidth, window.innerHeight );
 
-                controls.isOnObject( false );
+        document.body.appendChild( renderer.domElement );
 
-                ray.ray.origin.copy( controls.getObject().position );
-                ray.ray.origin.y -= 10;
+        //
 
-                var intersections = ray.intersectObjects( objects );
+        window.addEventListener( 'resize', onWindowResize, false );
 
-                if ( intersections.length > 0 ) {
+      }
 
-                    var distance = intersections[ 0 ].distance;
+      function onWindowResize() {
 
-                    if ( distance > 0 && distance < 10 ) {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
 
-                        controls.isOnObject( true );
+        renderer.setSize( window.innerWidth, window.innerHeight );
 
-                    }
+      }
 
-                }
+      function animate() {
 
-                controls.update();
+        requestAnimationFrame( animate );
 
-                renderer.render( scene, camera );
+        controls.isOnObject( false );
 
-            }
+        ray.ray.origin.copy( controls.getObject().position );
+        ray.ray.origin.y -= 10;
 
-        </script>
-    </body>
+        var intersections = ray.intersectObjects( objects );
+
+        if ( intersections.length > 0 ) {
+
+          var distance = intersections[ 0 ].distance;
+
+          if ( distance > 0 && distance < 10 ) {
+
+            controls.isOnObject( true );
+
+          }
+
+        }
+
+        controls.update();
+
+        renderer.render( scene, camera );
+
+      }
+
+    </script>
+  </body>
 </html>
