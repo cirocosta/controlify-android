@@ -14,6 +14,11 @@ var xRotation = 0.0,
     yRotation = 0.0,
     zRotation = 0.0;
 
+var xSpeed = 0.0,
+    ySpeed = 0.0;
+
+var zTranslation = 0.0;
+
 // calling main functions
 
 initializeScene();
@@ -45,6 +50,10 @@ function initializeScene () {
 
     scene.add(camera);
 
+    var directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
+    directionalLight.position = camera.position;
+    scene.add(directionalLight);
+
     triangle = createTriangle();
     triangle.position.set(-1.5, 0.0, 4.0);
 
@@ -61,6 +70,22 @@ function initializeScene () {
     scene.add(triangle);
     scene.add(square);
     scene.add(pyramid);
+
+    document.addEventListener("keydown", onDocumentKeyDown, false);
+}
+
+function onDocumentKeyDown (event) {
+    var keyCode = event.which;
+
+    if (keyCode == 38) {
+        xSpeed -= 0.01;
+    } else if (keyCode == 40) {
+        xSpeed += 0.01;
+    } else if (keyCode == 37) {
+        ySpeed -= 0.01;
+    } else if (keyCode == 39) {
+        ySpeed += 0.01;
+    }
 }
 
 function renderScene () {
@@ -76,8 +101,8 @@ function animateScene () {
 
     // cube.rotateOnAxis(new THREE.Vector3(1,1,1).normalize(), 0.075);
 
-    xRotation += 0.03;
-    yRotation += 0.02;
+    xRotation += xSpeed;
+    yRotation += ySpeed;
     zRotation += 0.04;
 
     cube.rotation.set(xRotation, yRotation, zRotation);
@@ -99,7 +124,7 @@ function createPyramid () {
         pyramidGeometry.faces[i].vertexColors[2] = new THREE.Color(0x0000FF);
     }
 
-    var pyramidMaterial = new THREE.MeshBasicMaterial({
+    var pyramidMaterial = new THREE.MeshLambertMaterial({
         vertexColors: THREE.VertexColors,
         side: THREE.DoubleSide
     });
@@ -112,12 +137,12 @@ function createCube () {
     var cubeGeometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
 
     var cubeMaterials = [
-        new THREE.MeshBasicMaterial({color: 0xFF0000}),
-        new THREE.MeshBasicMaterial({color: 0x00FF00}),
-        new THREE.MeshBasicMaterial({color: 0xFF00FF}),
-        new THREE.MeshBasicMaterial({color: 0xFFFF00}),
-        new THREE.MeshBasicMaterial({color: 0x00FFFF}),
-        new THREE.MeshBasicMaterial({color: 0xFFFFFF})
+        new THREE.MeshLambertMaterial({color: 0xFF0000}),
+        new THREE.MeshLambertMaterial({color: 0x00FF00}),
+        new THREE.MeshLambertMaterial({color: 0xFF00FF}),
+        new THREE.MeshLambertMaterial({color: 0xFFFF00}),
+        new THREE.MeshLambertMaterial({color: 0x00FFFF}),
+        new THREE.MeshLambertMaterial({color: 0xFFFFFF})
     ];
 
     var cubeMaterial = new THREE.MeshFaceMaterial(cubeMaterials);

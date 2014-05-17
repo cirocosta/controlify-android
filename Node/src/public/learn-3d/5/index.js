@@ -33,7 +33,7 @@ function initializeScene () {
     // allow it to look to the center of the scene.
 
     camera = new THREE.PerspectiveCamera(45, canvasWidth / canvasHeight, 1, 100);
-    camera.position.set(0,0, 10);
+    camera.position.set(0,0, 13);
     camera.lookAt(scene.position);
 
     // add the camera to the scene.
