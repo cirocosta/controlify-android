@@ -29,9 +29,20 @@ function initializeScene () {
     // instantiating the camera and then moving it 10 units toward Z to
     // allow it to look to the center of the scene.
 
-    camera = new THREE.PerspectiveCamera(45, canvasWidth / canvasHeight, 1, 100);
+    camera = new THREE.PerspectiveCamera(45, canvasWidth / canvasHeight, 0.1, 100);
     camera.position.set(0,0, 10);
     camera.lookAt(scene.position);
+
+    // planegeometry
+
+    var geometry = new THREE.PlaneGeometry(5,20);
+    // applying a matrix to its vertices to rotate it
+    geometry.applyMatrix(new THREE.Matrix4().makeRotationX(- Math.PI/2.03));
+    var material = new THREE.MeshBasicMaterial({color: 0xffff00, side: THREE.DoubleSide});
+    var plane = new THREE.Mesh(geometry, material);
+    scene.add(plane);
+
+
 
     // add the camera to the scene.
 

@@ -1,7 +1,7 @@
 function Pointer () {}
 
 /**
- * Checks if the browser has Pointer Lock enabled
+ * Checks if the browser has PointerLock enabled
  */
 Pointer.prototype._isEnabled = function() {
   return 'pointerLockElement' in document ||
@@ -23,7 +23,7 @@ Pointer.prototype._isEnabled = function() {
  */
 Pointer.prototype.setPointerLock = function(element, ccb, mcb, ecb) {
   if (!this._isEnabled())
-    throw new Error('No pointerLock for this browser :(');
+    throw new Error('No pointerLock for this browser.');
 
   var scope = this;
 
@@ -56,7 +56,7 @@ Pointer.prototype.setPointerLock = function(element, ccb, mcb, ecb) {
 };
 
 Pointer.prototype._pointerLockCallback = function(e, ccb, mcb) {
-  var element = document.querySelector('#magic-btn');
+  var element = this.element;
   var scope = this;
 
   if (document.pointerLockElement === element ||

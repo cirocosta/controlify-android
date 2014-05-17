@@ -2,9 +2,18 @@
   <head>
     <title>My first Three.js app</title>
     <style>canvas { width: 100%; height: 100% }</style>
+    <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
-    <button id="magic-btn">Let the magic begin!</button>
+
+    <div id="blocker">
+      <div id="instructions">
+        <span style="font-size:40px">Click to play</span>
+        <br />
+        (W, A, S, D = Move, SPACE = Jump, MOUSE = Look around)
+      </div>
+    </div>
+
     <script data-main="main.js" src="../require.min.js"></script>
   </body>
 </html>

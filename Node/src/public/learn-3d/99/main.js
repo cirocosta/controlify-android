@@ -1,27 +1,40 @@
 require.config({
-	paths: {
-		threejs: '../three.min'
-	}
+  paths: {
+    threejs: '../three.min'
+  }
 });
 
-require(['threejs', 'scripts/controls/pointer'], main);
+require([
+  'threejs',
+  'scripts/controls/pointer',
+  'scripts/scenario/main',
+  'scripts/controls/game-controls'
+], main);
+
 
 ////////////////////
 // MAIN execution //
 ////////////////////
 
-function main (THREE, Pointer) {
-	var btn = document.querySelector('#magic-btn');
-	var pl = new Pointer();
 
-	pl.setPointerLock(btn, function (isLocked) {
-	  console.log("Is locked?");
-	  console.log(isLocked);
-	}, function (e) {
-	  console.log(pl.getMovement(e));
-	});
+function main (THREE, Pointer, buildCanvas, GameControls) {
+  var elem = document.getElementById('instructions');
+  var pl = new Pointer();
 
-	btn.onclick = function (e) {
-	  pl.requestPermission();
-	};
+  pl.setPointerLock(elem, function (isLocked) {
+    if (isLocked) {
+      buildCanvas(THREE, GameControls);
+      elem.style.display = 'none';
+    } else {
+      elem.style.display = '';
+    }
+  }, function (e) {
+    console.log(pl.getMovement(e));
+  }, function (e) {
+    console.log("ERROR :(");
+  });
+
+  elem.onclick = function (e) {
+    pl.requestPermission();
+  };
 }
