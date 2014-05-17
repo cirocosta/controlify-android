@@ -1,4 +1,4 @@
-function KeyBoard () {
+function Keyboard () {
   this.moveForward = false;
   this.moveBackward = false;
   this.moveLeft = false;
@@ -6,12 +6,12 @@ function KeyBoard () {
   this.canJump = false;
 }
 
-KeyBoard.prototype.setKeyboard = function() {
+Keyboard.prototype.setKeyboard = function() {
   document.addEventListener( 'keydown', onKeyDown, false );
   document.addEventListener( 'keyup', onKeyUp, false );
 };
 
-KeyBoard.prototype.onKeyDown = function(event) {
+Keyboard.prototype.onKeyDown = function(event) {
   switch(event.keyCode) {
       case 38: // up
       case 87: // w
@@ -39,7 +39,7 @@ KeyBoard.prototype.onKeyDown = function(event) {
   }
 };
 
-KeyBoard.prototype.onKeyUp = function(event) {
+Keyboard.prototype.onKeyUp = function(event) {
     switch(event.keyCode) {
       case 38: // up
       case 87: // w
@@ -62,3 +62,11 @@ KeyBoard.prototype.onKeyUp = function(event) {
         break;
     }
 };
+
+////////////////
+// REQUIREJS  //
+////////////////
+
+define(function () {
+  return Keyboard;
+});

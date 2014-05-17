@@ -1,9 +1,9 @@
-function PointerLock () {}
+function Pointer () {}
 
 /**
  * Checks if the browser has Pointer Lock enabled
  */
-PointerLock.prototype._isEnabled = function() {
+Pointer.prototype._isEnabled = function() {
   return 'pointerLockElement' in document ||
          'mozPointerLockElement' in document ||
          'webkitPointerLockElement' in document;
@@ -21,7 +21,7 @@ PointerLock.prototype._isEnabled = function() {
  * the movimentation of the cursor
  * @param {Function} ecb Error callback
  */
-PointerLock.prototype.setPointerLock = function(element, ccb, mcb, ecb) {
+Pointer.prototype.setPointerLock = function(element, ccb, mcb, ecb) {
   if (!this._isEnabled())
     throw new Error('No pointerLock for this browser :(');
 
@@ -55,7 +55,7 @@ PointerLock.prototype.setPointerLock = function(element, ccb, mcb, ecb) {
   return this;
 };
 
-PointerLock.prototype._pointerLockCallback = function(e, ccb, mcb) {
+Pointer.prototype._pointerLockCallback = function(e, ccb, mcb) {
   var element = document.querySelector('#magic-btn');
   var scope = this;
 
@@ -74,18 +74,18 @@ PointerLock.prototype._pointerLockCallback = function(e, ccb, mcb) {
 /**
  * Triggers the permission for using this feature
  */
-PointerLock.prototype.requestPermission = function() {
+Pointer.prototype.requestPermission = function() {
   this.element.requestPointerLock();
 };
 
 /**
  * Releases the pointerLock
  */
-PointerLock.prototype.releaseThePointer = function() {
+Pointer.prototype.releaseThePointer = function() {
   document.exitPointerLock();
 };
 
-PointerLock.prototype.getMovement = function(e) {
+Pointer.prototype.getMovement = function(e) {
   return {
     x: e.movementX ||
        e.mozMovementX ||
@@ -97,3 +97,11 @@ PointerLock.prototype.getMovement = function(e) {
        0
   };
 };
+
+////////////////
+// REQUIREJS  //
+////////////////
+
+define(function () {
+  return Pointer;
+});
