@@ -19,8 +19,9 @@ PointerLock.prototype._isEnabled = function() {
  *                           indicating if it is locked of not.
  * @param {Function} mcb     the callback function for the change in
  * the movimentation of the cursor
+ * @param {Function} ecb Error callback
  */
-PointerLock.prototype.setPointerLock = function(element, ccb, mcb) {
+PointerLock.prototype.setPointerLock = function(element, ccb, mcb, ecb) {
   if (!this._isEnabled())
     throw new Error('No pointerLock for this browser :(');
 
@@ -45,28 +46,28 @@ PointerLock.prototype.setPointerLock = function(element, ccb, mcb) {
   document.addEventListener('mozpointerlockchange', plcCbFun, false);
   document.addEventListener('webkitpointerlockchange', plcCbFun, false);
 
+  if (ecb) {
+    document.addEventListener('pointerlockerror', ecb, false);
+    document.addEventListener('mozpointerlockerror', ecb, false);
+    document.addEventListener('webkitpointerlockerror', ecb, false);
+  }
+
   return this;
 };
 
-
 PointerLock.prototype._pointerLockCallback = function(e, ccb, mcb) {
-
   var element = document.querySelector('#magic-btn');
-
   var scope = this;
-  var mmCbFun = function (e) {
-    scope._moveCallback(e, mcb);
-  }
 
   if (document.pointerLockElement === element ||
       document.mozPointerLockElement === element ||
       document.webkitPointerLockElement === element) {
 
     ccb(true);
-    document.addEventListener("mousemove", mmCbFun, false);
+    document.addEventListener("mousemove", mcb, false);
   } else {
     ccb(false);
-    document.removeEventListener("mousemove", mmCbFun, false);
+    document.removeEventListener("mousemove", mcb, false);
   }
 };
 
@@ -84,15 +85,15 @@ PointerLock.prototype.releaseThePointer = function() {
   document.exitPointerLock();
 };
 
-PointerLock.prototype._moveCallback = function(e, mcb) {
-  var movementX = e.movementX ||
-                  e.mozMovementX ||
-                  e.webkitMovementX ||
-                  0,
-      movementY = e.movementY ||
-                  e.mozMovementY ||
-                  e.webkitMovementY ||
-                  0;
-
-  mcb({x: movementX, y: movementY});
+PointerLock.prototype.getMovement = function(e) {
+  return {
+    x: e.movementX ||
+       e.mozMovementX ||
+       e.webkitMovementX ||
+       0,
+    y: e.movementY ||
+       e.mozMovementY ||
+       e.webkitMovementY ||
+       0
+  };
 };

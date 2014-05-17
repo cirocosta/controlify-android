@@ -16,8 +16,9 @@
         console.log("Is locked?");
         console.log(isLocked);
       }, function (e) {
-        console.log(e);
+        console.log(pl.getMovement(e));
       });
+
       btn.onclick = function (e) {
         pl.requestPermission();
       };
