@@ -6,7 +6,6 @@ require.config({
 
 require([
   'threejs',
-  'scripts/controls/pointer',
   'scripts/scenario/main',
   'scripts/controls/game-controls'
 ], main);
@@ -16,25 +15,21 @@ require([
 // MAIN execution //
 ////////////////////
 
-
-function main (THREE, Pointer, buildCanvas, GameControls) {
+function main (THREE, CanvasObj, GameControls) {
   var elem = document.getElementById('instructions');
   var pl = new Pointer();
+  var canvasObj = new CanvasObj();
+  var pointerElem = document.getElementById('instructions');
 
-  pl.setPointerLock(elem, function (isLocked) {
-    if (isLocked) {
-      buildCanvas(THREE, GameControls);
-      elem.style.display = 'none';
+  canvasObj.buildCanvas(pointerElem);
+
+  document.addEventListener('plchange', function (e) {
+    if (e.detail.isLocked) {
+      pointerElem.style.display = 'none';
+      canvasObj.enableRendering();
     } else {
-      elem.style.display = '';
+      pointerElem.style.display = '';
+      canvasObj.disableRendering();
     }
-  }, function (e) {
-    console.log(pl.getMovement(e));
-  }, function (e) {
-    console.log("ERROR :(");
-  });
-
-  elem.onclick = function (e) {
-    pl.requestPermission();
-  };
+  }, false);
 }

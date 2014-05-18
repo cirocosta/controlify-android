@@ -3,12 +3,29 @@ function Keyboard () {
   this.moveBackward = false;
   this.moveLeft = false;
   this.moveRight = false;
+  this.moveTop = false; //jump!
   this.canJump = false;
 }
 
 Keyboard.prototype.setKeyboard = function() {
-  document.addEventListener( 'keydown', onKeyDown, false );
-  document.addEventListener( 'keyup', onKeyUp, false );
+  var scope = this;
+
+  document.addEventListener('keydown', function (e) {
+    scope.onKeyDown.apply(scope, [e]);
+  }, false );
+  document.addEventListener('keyup', function (e) {
+    scope.onKeyUp.apply(scope, [e]);
+  }, false );
+};
+
+Keyboard.prototype.getStatus = function () {
+  return {
+    f: this.moveForward,
+    r: this.moveRight,
+    b: this.moveBackward,
+    l: this.moveLeft,
+    t: this.moveTop
+  };
 };
 
 Keyboard.prototype.onKeyDown = function(event) {
@@ -20,7 +37,8 @@ Keyboard.prototype.onKeyDown = function(event) {
 
       case 37: // left
       case 65: // a
-        this.moveLeft = true; break;
+        this.moveLeft = true;
+        break;
 
       case 40: // down
       case 83: // s
@@ -32,10 +50,12 @@ Keyboard.prototype.onKeyDown = function(event) {
         this.moveRight = true;
         break;
 
-      // case 32: // space
-      //   if ( this.canJump === true ) velocity.y += 350;
-      //   canJump = false;
-      //   break;
+      case 32: // space
+        // if (this.canJump === true)
+          // velocity.y += 350;
+        // canJump = false;
+        this.moveTop = true;
+        break;
   }
 };
 
