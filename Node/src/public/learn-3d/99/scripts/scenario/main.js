@@ -3,7 +3,9 @@ define(['threejs',
        ], function (THREE, GameControls) {
   'use strict';
 
-  function CanvasObj () { }
+  function CanvasObj () {
+    this.enabled = false;
+  }
 
   CanvasObj.prototype.buildCanvas = function() {
     var camera, scene, renderer;
@@ -11,7 +13,7 @@ define(['threejs',
     var ray;
     var controls;
     var objects = [];
-
+    var scope = this;
     var COLORS = {
       white: 0xffffff
     };
@@ -158,10 +160,23 @@ define(['threejs',
       requestAnimationFrame(animate);
       renderer.render(scene, camera);
 
+      if (!scope.enabled) return;
       controls.update();
     }
 
     animate();
+  };
+
+  // CanvasObj.prototype.requestPointer = function() {
+  //   this.controls.getPointer().requestPermission();
+  // };
+
+  CanvasObj.prototype.enableRendering = function() {
+    this.enabled = true;
+  };
+
+  CanvasObj.prototype.disableRendering = function() {
+    this.enabled = false;
   };
 
   return CanvasObj;
