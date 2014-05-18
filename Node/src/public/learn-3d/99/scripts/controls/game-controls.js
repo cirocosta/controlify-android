@@ -13,13 +13,40 @@ define(['threejs',
     this.pointer;
   }
 
-  GameControls.prototype.setGameControls = function() {
+  GameControls.prototype._createPlChangeEvent = function(isLocked) {
+    var ev = new CustomEvent("plchange", {
+      detail: {
+        isLocked: isLocked
+      },
+      bubbles: true,
+      cancelable: true
+    });
+
+    return ev;
+  };
+
+  GameControls.prototype.setPointer = function (elem) {
+    var scope = this;
+
+    this.pointer.setPointerLock(elem, function (isLocked) {
+      elem.dispatchEvent(scope._createPlChangeEvent(isLocked));
+    }, function (e) {
+      console.log(scope.pointer.getMovement(e));
+    }, function () {});
+
+    elem.onclick = function (e) {
+      scope.pointer.requestPermission();
+    };
+  };
+
+  GameControls.prototype.setGameControls = function(pointerElem) {
     var scope = this;
     var pitchObject;
 
     this.keyboard = new Keyboard();
     this.keyboard.setKeyboard();
     this.pointer = new Pointer();
+    this.setPointer(pointerElem);
 
     this.camera.rotation.set(0,0,0);
 
@@ -40,7 +67,7 @@ define(['threejs',
     var delta = (time - this.prevTime) / 1000;
     var kMov = this.keyboard.getStatus();
 
-    // console.log(kMov);
+    console.log(kMov);
 
     this.velocity.x -= this.velocity.x * 10.0 * delta;
     this.velocity.z -= this.velocity.z * 10.0 * delta;

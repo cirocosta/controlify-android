@@ -10,10 +10,10 @@ function Keyboard () {
 Keyboard.prototype.setKeyboard = function() {
   var scope = this;
 
-  document.addEventListener( 'keydown', function (e) {
+  document.addEventListener('keydown', function (e) {
     scope.onKeyDown.apply(scope, [e]);
   }, false );
-  document.addEventListener( 'keyup', function (e) {
+  document.addEventListener('keyup', function (e) {
     scope.onKeyUp.apply(scope, [e]);
   }, false );
 };

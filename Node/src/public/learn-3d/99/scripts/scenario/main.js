@@ -7,7 +7,7 @@ define(['threejs',
     this.enabled = false;
   }
 
-  CanvasObj.prototype.buildCanvas = function() {
+  CanvasObj.prototype.buildCanvas = function(pointerElem) {
     var camera, scene, renderer;
     var geometry, material, mesh;
     var ray;
@@ -50,7 +50,7 @@ define(['threejs',
     // SETTING CONTROLS
 
     controls = new GameControls(camera);
-    controls.setGameControls();
+    controls.setGameControls(pointerElem);
     scene.add(controls.getObject());
 
     // SETTING RAYCASTER
