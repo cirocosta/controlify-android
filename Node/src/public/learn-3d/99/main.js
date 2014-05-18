@@ -17,12 +17,14 @@ require([
 ////////////////////
 
 
-function main (THREE, Pointer, buildCanvas, GameControls) {
+function main (THREE, Pointer, CanvasObj, GameControls) {
   var elem = document.getElementById('instructions');
   var pl = new Pointer();
+  var canvasObj = new CanvasObj();
+  console.log(canvasObj);
+  canvasObj.buildCanvas();
 
-
-  buildCanvas(THREE, GameControls);
+  // buildCanvas(THREE, GameControls);
 
   // pl.setPointerLock(elem, function (isLocked) {
   //   if (isLocked) {
