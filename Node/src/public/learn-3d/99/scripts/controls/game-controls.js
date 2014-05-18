@@ -6,8 +6,11 @@ define(['threejs',
     this.camera = camera;
 
     this.yawObject;
+    this.pitchObject;
     this.prevTime = performance.now();
     this.velocity = new THREE.Vector3();
+
+    this.movement = {x:0.0, y:0.0};
 
     this.keyboard;
     this.pointer;
@@ -25,23 +28,8 @@ define(['threejs',
     return ev;
   };
 
-  GameControls.prototype.setPointer = function (elem) {
-    var scope = this;
-
-    this.pointer.setPointerLock(elem, function (isLocked) {
-      elem.dispatchEvent(scope._createPlChangeEvent(isLocked));
-    }, function (e) {
-      console.log(scope.pointer.getMovement(e));
-    }, function () {});
-
-    elem.onclick = function (e) {
-      scope.pointer.requestPermission();
-    };
-  };
-
   GameControls.prototype.setGameControls = function(pointerElem) {
     var scope = this;
-    var pitchObject;
 
     this.keyboard = new Keyboard();
     this.keyboard.setKeyboard();
@@ -50,24 +38,47 @@ define(['threejs',
 
     this.camera.rotation.set(0,0,0);
 
-    pitchObject = new THREE.Object3D();
-    pitchObject.add(this.camera);
+    this.pitchObject = new THREE.Object3D();
+    this.pitchObject.add(this.camera);
 
     this.yawObject = new THREE.Object3D();
     this.yawObject.position.y = 10;
-    this.yawObject.add(pitchObject);
+    this.yawObject.add(this.pitchObject);
   };
 
   GameControls.prototype.getObject = function() {
     return this.yawObject;
   };
 
+  GameControls.prototype.getPitchObject = function() {
+    return this.pitchObject;
+  };
+
+  GameControls.prototype.setPointer = function (elem) {
+    var scope = this;
+
+    this.pointer.setPointerLock(elem, function (isLocked) {
+      elem.dispatchEvent(scope._createPlChangeEvent(isLocked));
+    }, function (e) {
+
+      var movement = scope.pointer.getMovement(e);
+      var PI_2 = Math.PI/2;
+      scope.yawObject.rotation.y -= movement.x * 0.002;
+      scope.pitchObject.rotation.x -= movement.y * 0.002;
+      scope.pitchObject.rotation.x
+          = Math.max(-PI_2, Math.min(PI_2, scope.pitchObject.rotation.x));
+
+    }, function () {});
+
+    elem.onclick = function (e) {
+      scope.pointer.requestPermission();
+    };
+  };
+
   GameControls.prototype.update = function() {
     var time = performance.now();
     var delta = (time - this.prevTime) / 1000;
     var kMov = this.keyboard.getStatus();
-
-    console.log(kMov);
 
     this.velocity.x -= this.velocity.x * 10.0 * delta;
     this.velocity.z -= this.velocity.z * 10.0 * delta;

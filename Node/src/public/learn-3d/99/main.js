@@ -26,6 +26,12 @@ function main (THREE, CanvasObj, GameControls) {
   canvasObj.buildCanvas(pointerElem);
 
   document.addEventListener('plchange', function (e) {
-    console.log(e.detail);
+    if (e.detail.isLocked) {
+      pointerElem.style.display = 'none';
+      canvasObj.enableRendering();
+    } else {
+      pointerElem.style.display = '';
+      canvasObj.disableRendering();
+    }
   }, false);
 }

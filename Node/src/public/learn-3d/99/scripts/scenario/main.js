@@ -167,10 +167,6 @@ define(['threejs',
     animate();
   };
 
-  // CanvasObj.prototype.requestPointer = function() {
-  //   this.controls.getPointer().requestPermission();
-  // };
-
   CanvasObj.prototype.enableRendering = function() {
     this.enabled = true;
   };
