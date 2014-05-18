@@ -19,8 +19,6 @@ Keyboard.prototype.setKeyboard = function() {
 };
 
 Keyboard.prototype.getStatus = function () {
-  // console.log({f: this.moveForward,r: this.moveRight,b: this.moveBackward,l: this.moveLeft});
-
   return {
     f: this.moveForward,
     r: this.moveRight,

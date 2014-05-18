@@ -6,7 +6,6 @@ require.config({
 
 require([
   'threejs',
-  // 'scripts/controls/pointer',
   'scripts/scenario/main',
   'scripts/controls/game-controls'
 ], main);
@@ -15,7 +14,6 @@ require([
 ////////////////////
 // MAIN execution //
 ////////////////////
-
 
 function main (THREE, CanvasObj, GameControls) {
   var elem = document.getElementById('instructions');
