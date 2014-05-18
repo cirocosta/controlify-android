@@ -63,7 +63,7 @@ function buildCanvas (THREE, GameControls) {
   // After that, apply a lot of stuff to colorize it.
 
   geometry = new THREE.PlaneGeometry(2000, 2000, 100, 100);
-  geometry.applyMatrix(new THREE.Matrix4().makeRotationX(- Math.PI/2.04));
+  geometry.applyMatrix(new THREE.Matrix4().makeRotationX(- Math.PI/2.0));
 
   var i = 0,
       l = geometry.faces.length;

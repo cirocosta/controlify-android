@@ -151,6 +151,8 @@ THREE.PointerLockControls = function ( camera ) {
 		velocity.x -= velocity.x * 10.0 * delta;
 		velocity.z -= velocity.z * 10.0 * delta;
 
+		console.log(Math.floor(velocity.x), Math.floor(velocity.z));
+
 		velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
 
 		if ( moveForward ) velocity.z -= 400.0 * delta;
@@ -166,7 +168,7 @@ THREE.PointerLockControls = function ( camera ) {
 		}
 
 		yawObject.translateX( velocity.x * delta );
-		yawObject.translateY( velocity.y * delta ); 
+		yawObject.translateY( velocity.y * delta );
 		yawObject.translateZ( velocity.z * delta );
 
 		if ( yawObject.position.y < 10 ) {
